@@ -55,6 +55,6 @@ public class Date {
     }
 
     public String toString(){
-        return date + "\n" + String.valueOf(totalCalories) + " total calories";
+        return date + "\n" + String.valueOf(totalCalories) + "  total calories";
     }
 }
