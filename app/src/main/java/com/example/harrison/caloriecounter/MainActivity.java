@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     public void signIn(View view)
     {
         EditText editUserID = findViewById(R.id.text_userID);
-        String user = editUserID.getText().toString();
+        String userID = editUserID.getText().toString();
 
         Intent intent = new Intent(this, UserActivity.class);
         startActivity(intent);
