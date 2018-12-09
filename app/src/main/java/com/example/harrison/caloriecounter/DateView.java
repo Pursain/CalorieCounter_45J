@@ -1,14 +1,11 @@
 package com.example.harrison.caloriecounter;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.firebase.database.ChildEventListener;
@@ -17,38 +14,38 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
-
-
-public class MainActivity extends AppCompatActivity {
+public class DateView extends AppCompatActivity {
 
     private FirebaseDatabase database;
-    private DatabaseReference refTesting;
-    private ArrayList<String> arrayOfUsernames;
-    private ArrayAdapter<String> usernameAdapter;
+    private DatabaseReference refDate;
+    private ChildEventListener dateEventListener;
+    private ArrayAdapter<String> foodAdapter;
     private ListView listView;
-    private Button btn;
+    private Date date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_date_view);
 
+
+
+        date = new Date("12-3-18");
 
         database = FirebaseDatabase.getInstance();
-        refTesting = database.getReference("users");
+        refDate = database.getReference("users/Joe/" + date.getDate());
 
-        arrayOfUsernames = new ArrayList<>();
-        usernameAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayOfUsernames);
-        listView = findViewById(R.id.listView2);
-        listView.setAdapter(usernameAdapter);
+        foodAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, date.getArrayOfFoodsStrings());
+        listView = findViewById(R.id.list_view_Date);
+        listView.setAdapter(foodAdapter);
 
-        refTesting.addChildEventListener(new ChildEventListener() {
+
+        dateEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Log.d("testing", dataSnapshot.getKey());
-                usernameAdapter.add(dataSnapshot.getKey());
-                Log.d("testing::", arrayOfUsernames.toString());
+                Log.d("testingDateView", dataSnapshot.toString());
+                date.addFood(dataSnapshot);
+                foodAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -70,16 +67,7 @@ public class MainActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
-
-        }
-
-
-
-        public void moveToUserView(View view){
-            Log.d("testing:::", "hello");
-
-            Intent intent = new Intent(this, UserView.class);
-            startActivity(intent);
-        }
+        };
+        refDate.addChildEventListener(dateEventListener);
+    }
 }
