@@ -74,7 +74,7 @@ public class UserActivity extends AppCompatActivity {
         */
     }
     
-        public void addDate(View view)
+    public void addDate(View view)
     {
 //        Intent intent = new Intent(this, AddDateActivity.class);
 //        startActivity( intent);
