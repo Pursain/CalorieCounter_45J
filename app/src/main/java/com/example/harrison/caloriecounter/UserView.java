@@ -78,7 +78,7 @@ public class UserView extends AppCompatActivity {
         startActivity(intent);
     }
     
-        public void goBack( View view )
+    public void goBack( View view )
     {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity( intent);
