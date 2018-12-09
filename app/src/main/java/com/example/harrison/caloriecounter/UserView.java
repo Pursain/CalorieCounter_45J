@@ -77,4 +77,10 @@ public class UserView extends AppCompatActivity {
         Intent intent = new Intent(this, DateView.class);
         startActivity(intent);
     }
+    
+        public void goBack( View view )
+    {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity( intent);
+    }
 }
