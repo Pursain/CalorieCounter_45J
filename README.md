@@ -39,3 +39,31 @@ Possible functionalities/Activities:
 
 How the app will look 
 First Page: List of previous dates that they have added entries
+
+
+
+#THINGS TO DO CHECKLIST
+
+## Login page
+- [x] UI design
+- [ ] existing login
+        if already exists, pass username through intent
+- [ ] new login
+        create a new firebase entry under the user branch and pass username through intent
+- [ ] click to move to UserView
+        Use intent, pass username!!
+        
+## UserView Main Page
+- [ ] UI design
+        - [ ] dynamic title, use intent info passed from above page
+        
+## Add Food Page
+- [x] UI design
+- [ ] Add food to firebase
+        if exist, update quanity
+        if not exist, add food, then add quanity attribute and calorie attribute
+- [ ] Delete food
+        if exist, update quanity, if quanity = zero
+
+
+
