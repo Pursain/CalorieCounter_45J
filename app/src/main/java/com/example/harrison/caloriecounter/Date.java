@@ -118,11 +118,7 @@ public class Date {
         }
         updateTotalCalories();
     }
-
-    //I don't think we need this but I already wrote it...
-    //It's because we make data changes only through the Add/Delete Activities
-    //and whenever you switch activities (back to the view), all the local data is
-    //rebuilt from firebase thus we should only make edits to the firebase data
+    
     public void addFood(String name, int quanity, int calories) {
         arrayOfFoods.add(new Food(name, quanity, calories));
         updateTotalCalories();
