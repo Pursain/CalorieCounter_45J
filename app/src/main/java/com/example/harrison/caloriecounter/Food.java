@@ -13,7 +13,7 @@ public class Food {
        // Log.d("testing Foodzzz.java", name + " " + dataSnapshot.getKey());
         for (DataSnapshot ds: dataSnapshot.getChildren()){
            // Log.d("testing Food.java", name + "current key" + ds.getKey());
-            if(ds.getKey().equals("quantity")) {
+            if(ds.getKey().equals("quanity")) {
                 this.quanity = ds.getValue(Integer.class);
                // Log.d("testing Food.java", name + "quanity" + Integer.toString(this.quanity));
             }
@@ -25,7 +25,7 @@ public class Food {
         totalCalories = this.quanity * this.calories;
     }
 
-    public void setQuantity(int quanity){
+    public void setQuanity(int quanity){
         this.quanity = quanity;
     }
 

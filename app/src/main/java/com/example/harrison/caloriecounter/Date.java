@@ -32,7 +32,7 @@ public class Date {
     }
 
     public void addFood(DataSnapshot dataSnapshot){
-        //{ key = banana, value = {quantity=2, calories=40} }
+        //{ key = banana, value = {quanity=2, calories=40} }
         Food newFood = new Food(dataSnapshot.getKey(), dataSnapshot);
         arrayOfFoods.add(newFood);
         arrayOfFoodsStrings.add(newFood.toString());
