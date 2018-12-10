@@ -17,7 +17,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".UserView" />
-        <activity android:name=".DateView"></activity>
+        <activity android:name=".DateView" />
+        <activity android:name=".AddDateView" />
+        <activity android:name=".DeleteDateView" />
+        <activity android:name=".AddFood" />
+        <activity android:name=".DeleteFoodView" />
     </application>
 
 </manifest>

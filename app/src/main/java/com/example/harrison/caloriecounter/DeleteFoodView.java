@@ -7,7 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,52 +19,57 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class DateView extends AppCompatActivity {
+
+public class DeleteFoodView extends AppCompatActivity {
 
     private FirebaseDatabase database;
     private DatabaseReference refDate;
     private ChildEventListener dateEventListener;
     private ArrayAdapter<String> foodAdapter;
     private ListView listView;
+    private TextView textView_confirmDelete;
     private Date date;
-    private TextView textView_totalCalories;
 
     private String username;
     private String dateString;
+    private String selectedFood;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_date_view);
+        setContentView(R.layout.activity_remove_food);
 
         username = getIntent().getStringExtra("username");
-        getIntent().removeExtra("username");
-
         dateString = getIntent().getStringExtra("date");
+        getIntent().removeExtra("username");
         getIntent().removeExtra("date");
-
-        this.setTitle(dateString);   //set as title
 
         date = new Date(dateString);
 
-        textView_totalCalories = findViewById(R.id.DatetextView);
         database = FirebaseDatabase.getInstance();
-        refDate = database.getReference("users/" + username +"/" + dateString);
+        refDate = database.getReference("users/" + username + "/" + dateString);
 
-        foodAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, date.getArrayOfFoodsStrings());
-        listView = findViewById(R.id.foodList);
+        foodAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        listView = findViewById(R.id.listView_removeFood);
         listView.setAdapter(foodAdapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedFood = foodAdapter.getItem(i);
+                Log.d("TestingFoodDelSearch", "clicked on " + selectedFood);
+                textView_confirmDelete = findViewById(R.id.choiceText);
+                textView_confirmDelete.setText(selectedFood);
+            }
+        });
 
         dateEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Log.d("testingDateView", dataSnapshot.toString());
                 date.addFood(dataSnapshot);
-                foodAdapter.notifyDataSetChanged();
-
-                textView_totalCalories.setText(Integer.toString(date.getTotalCalories()) + " Total Calories");
+                foodAdapter.add(dataSnapshot.getKey());
             }
 
             @Override
@@ -88,23 +95,28 @@ public class DateView extends AppCompatActivity {
         refDate.addChildEventListener(dateEventListener);
     }
 
-    public void moveToDeleteFoodView(View view){
-        Intent newIntent = new Intent(this, DeleteFoodView.class);
-        newIntent.putExtra("username", username);
-        newIntent.putExtra("date", dateString);
-        startActivity(newIntent);
+    public void deleteButtonAction(View view){
+        refDate.child(selectedFood).removeValue();
+        goBack(view);
     }
 
-    public void addFoodItems(View view){
-        Intent newIntent = new Intent(this, AddFood.class);
-        newIntent.putExtra("username", username);
-        newIntent.putExtra("date", dateString);
-        startActivity(newIntent);
+    public void searchButton(View view){
+        foodAdapter.clear();
+        String searchText = ((EditText)findViewById(R.id.searchEditText)).getText().toString();
+        Log.d("TestingFoodDelSearch", "search terms  " + searchText);
+        for (String fName : date.getArrayOfJustFoods()){
+            Log.d("TestingFoodDelSearch", "looping " + fName);
+            if (fName.substring(0, searchText.length()).equalsIgnoreCase(searchText)){
+                Log.d("TestingFoodDelSearch", "found match " + fName);
+                foodAdapter.add(fName);
+            }
+        }
     }
 
     public void goBack(View view){
-        Intent newIntent = new Intent(this, UserView.class);
-        newIntent.putExtra("username", username);
-        startActivity(newIntent);
+        Intent intent = new Intent(this, DateView.class);
+        intent.putExtra("username", username);
+        intent.putExtra("date", dateString);
+        startActivity( intent);
     }
 }

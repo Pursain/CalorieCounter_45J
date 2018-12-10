@@ -7,21 +7,33 @@
     tools:context=".MainActivity">
 
 
-    <ListView
-        android:id="@+id/listView2"
-        android:layout_width="match_parent"
-        android:layout_height="235dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+    <EditText
+        android:id="@+id/text_userID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:hint="Enter User ID"
+        android:textSize="20sp" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/button_signIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="127dp"
-        android:layout_marginStart="129dp"
-        android:onClick="moveToUserView"
-        android:text="Button" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="194dp"
+        android:onClick="onClickSignIn"
+        android:text="Sign In" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="124dp"
+        android:text="Welcome to Calorie Counter!\nPut in your unique ID to start"
+        android:textAlignment="center"
+        android:textSize="18sp" />
+
 </RelativeLayout>

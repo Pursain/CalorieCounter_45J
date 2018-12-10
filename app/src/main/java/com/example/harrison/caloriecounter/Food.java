@@ -4,7 +4,7 @@ import com.google.firebase.database.DataSnapshot;
 
 public class Food {
     private String name;
-    private int quanity;
+    private int quantity;
     private int calories;
     private int totalCalories;
 
@@ -13,31 +13,35 @@ public class Food {
        // Log.d("testing Foodzzz.java", name + " " + dataSnapshot.getKey());
         for (DataSnapshot ds: dataSnapshot.getChildren()){
            // Log.d("testing Food.java", name + "current key" + ds.getKey());
-            if(ds.getKey().equals("quanity")) {
-                this.quanity = ds.getValue(Integer.class);
-               // Log.d("testing Food.java", name + "quanity" + Integer.toString(this.quanity));
+            if(ds.getKey().equals("quantity")) {
+                this.quantity = ds.getValue(Integer.class);
+               // Log.d("testing Food.java", name + "quantity" + Integer.toString(this.quantity));
             }
             if(ds.getKey().equals("calories")) {
                 this.calories = ds.getValue(Integer.class);
-                //Log.d("testing Food.java", name + "calories" + Integer.toString(this.quanity));
+                //Log.d("testing Food.java", name + "calories" + Integer.toString(this.quantity));
             }
         }
-        totalCalories = this.quanity * this.calories;
+        totalCalories = this.quantity * this.calories;
     }
 
-    public void setQuanity(int quanity){
-        this.quanity = quanity;
+    public void setQuantity(int quantity){
+        this.quantity = quantity;
     }
 
-    public int getQuanity(){
-        return quanity;
+    public int getQuantity(){
+        return quantity;
     }
 
     public int getTotalCalories(){
         return totalCalories;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public String toString(){
-        return name + "\nQuanity " + quanity + "\nCalories " + calories;
+        return name + "\nQuantity " + quantity + "\nCalories " + calories;
     }
 }

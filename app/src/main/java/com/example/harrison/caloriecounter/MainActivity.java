@@ -7,9 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
+import android.widget.EditText;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -23,32 +21,25 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseDatabase database;
-    private DatabaseReference refTesting;
+    private DatabaseReference refUsers;
     private ArrayList<String> arrayOfUsernames;
-    private ArrayAdapter<String> usernameAdapter;
-    private ListView listView;
-    private Button btn;
+    private EditText editTextUserID;
+    private String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         database = FirebaseDatabase.getInstance();
-        refTesting = database.getReference("users");
-
+        refUsers = database.getReference("users");
         arrayOfUsernames = new ArrayList<>();
-        usernameAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayOfUsernames);
-        listView = findViewById(R.id.listView2);
-        listView.setAdapter(usernameAdapter);
 
-        refTesting.addChildEventListener(new ChildEventListener() {
+        refUsers.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Log.d("testing", dataSnapshot.getKey());
-                usernameAdapter.add(dataSnapshot.getKey());
-                Log.d("testing::", arrayOfUsernames.toString());
+                Log.d("testingMain", "Adding " + dataSnapshot.getKey() + " to the array");
+                arrayOfUsernames.add(dataSnapshot.getKey());
             }
 
             @Override
@@ -58,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
+                arrayOfUsernames.remove(dataSnapshot.getKey());
             }
 
             @Override
@@ -71,15 +62,20 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
         }
 
+    public void onClickSignIn(View view){
+        editTextUserID = (EditText) findViewById(R.id.text_userID);
+        userID = editTextUserID.getText().toString();
+        Log.d("testingMain", "Sign In button clicked as " + userID);
 
-
-        public void moveToUserView(View view){
-            Log.d("testing:::", "hello");
-
-            Intent intent = new Intent(this, UserView.class);
-            startActivity(intent);
+        if (!arrayOfUsernames.contains(userID)){
+            refUsers.child(userID).setValue("");
+            Log.d("testingMain", "Created new user");
         }
+
+        Intent intent = new Intent(this, UserView.class);
+        intent.putExtra("username", userID);
+        startActivity(intent);
+    }
 }

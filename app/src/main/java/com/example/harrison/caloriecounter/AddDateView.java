@@ -7,9 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -17,21 +16,20 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class UserView extends AppCompatActivity {
-
+public class AddDateView extends AppCompatActivity
+{
     private FirebaseDatabase database;
     private DatabaseReference refUser;
-    private ArrayAdapter<String> dateAdapter;
-    private ListView listViewDates;
     private User user;
-
     private String username;
-    private String selectedDate;
+
+    private EditText editTextDateInput;
+    private String inputedDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_view);
+        setContentView(R.layout.activity_add_date);
 
         username = getIntent().getStringExtra("username");
         getIntent().removeExtra("username");
@@ -42,25 +40,11 @@ public class UserView extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         refUser = database.getReference("users/" + username);
 
-        dateAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, user.getArrayOfDatesStrings());
-        listViewDates = findViewById(R.id.listview_userMain);
-        listViewDates.setAdapter(dateAdapter);
-
-        listViewDates.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                selectedDate = dateAdapter.getItem(i).split("\n")[0];
-                Log.d("testingUserView", "clicked on " + selectedDate);
-                onClickGoToDateView(view);
-            }
-        });
-
         refUser.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Log.d("testingUserView", "Added date " + dataSnapshot.getKey() +" to user " + username);
+                Log.d("testingUserViewAdd", "Added date " + dataSnapshot.getKey() +" to user " + username);
                 user.addDate(dataSnapshot);     //{ key = 12-1-18, value = {apple={quanity=4, calories=30}} }
-                dateAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -70,9 +54,7 @@ public class UserView extends AppCompatActivity {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("testingUserView", "Deleted date " + dataSnapshot.getKey() +" in user " + username);
-                user.deleteDate(dataSnapshot);
-                dateAdapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -87,27 +69,31 @@ public class UserView extends AppCompatActivity {
         });
     }
 
-    public void onClickAddDate(View view){
-        Intent intent = new Intent(this, AddDateView.class);
-        intent.putExtra("username", username);
-        startActivity(intent);
+    public void addDate(View view)
+    {
+        editTextDateInput = findViewById(R.id.editText_addDate);
+        inputedDate = editTextDateInput.getText().toString();
+        String[] stringArr = inputedDate.split("-");
+        if (stringArr.length != 3 || !stringArr[0].matches("[0-9]+")
+                || !stringArr[1].matches("[0-9]+") || !stringArr[2].matches("[0-9]+")
+                || Integer.valueOf(stringArr[0]) > 12 || Integer.valueOf(stringArr[1]) > 31
+                || Integer.valueOf(stringArr[2]) > 99) {
+            editTextDateInput.setText("");
+            Toast.makeText(this, "Oof! This date is invalid, the format is MM-DD-YY", Toast.LENGTH_SHORT).show();
+        }else if (user.getArrayOfJustDates().contains(inputedDate)){
+            editTextDateInput.setText("");
+            Toast.makeText(this, "Oops! This date is already in your list, try another date!", Toast.LENGTH_SHORT).show();
+        }else {
+            refUser.child(inputedDate).setValue("");
+            Toast.makeText(this, "Great! You have added a date. Click on the date in the list to add some foods!", Toast.LENGTH_LONG).show();
+            onClickGoBack(view);
+        }
     }
 
-    public void onClickDeleteDate(View view){
-        Intent intent = new Intent(this, DeleteDateView.class);
+    public void onClickGoBack(View view)
+    {
+        Intent intent = new Intent(this, UserView.class);
         intent.putExtra("username", username);
-        startActivity(intent);
-    }
-
-    public void onClickGoToDateView(View view){
-        Intent intent = new Intent(this, DateView.class);
-        intent.putExtra("username", username);
-        intent.putExtra("date", selectedDate);
-        startActivity(intent);
-    }
-
-    public void onClickBack(View view){
-        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 }

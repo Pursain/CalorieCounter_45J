@@ -11,22 +11,26 @@ public class Date {
 
     ArrayList<Food> arrayOfFoods;
     ArrayList<String> arrayOfFoodsStrings;
+    ArrayList<String> arrayOfJustFoods;
 
     public Date(String date){
         this.date = date;
         arrayOfFoods = new ArrayList<>();
         arrayOfFoodsStrings = new ArrayList<>();
+        arrayOfJustFoods = new ArrayList<>();
     }
 
     public Date(String date, DataSnapshot dataSnapshot){
         this.date = date;
         arrayOfFoods = new ArrayList<>();
         arrayOfFoodsStrings = new ArrayList<>();
+        arrayOfJustFoods = new ArrayList<>();
 
         for (DataSnapshot ds : dataSnapshot.getChildren()){
             Food newFood = new Food(ds.getKey(), ds);
             arrayOfFoods.add(newFood);
             arrayOfFoodsStrings.add(newFood.toString());
+            arrayOfJustFoods.add(ds.getKey());
         }
         updateTotalCalories();
     }
@@ -36,11 +40,20 @@ public class Date {
         Food newFood = new Food(dataSnapshot.getKey(), dataSnapshot);
         arrayOfFoods.add(newFood);
         arrayOfFoodsStrings.add(newFood.toString());
+        arrayOfJustFoods.add(dataSnapshot.getKey());
         updateTotalCalories();
     }
 
     public ArrayList<String> getArrayOfFoodsStrings() {
         return arrayOfFoodsStrings;
+    }
+
+    public ArrayList<String> getArrayOfJustFoods() {
+        return arrayOfJustFoods;
+    }
+
+    public ArrayList<Food> getArrayOfFoods() {
+        return arrayOfFoods;
     }
 
     private void updateTotalCalories(){
@@ -50,11 +63,15 @@ public class Date {
         }
     }
 
+    public int getTotalCalories() {
+        return totalCalories;
+    }
+
     public String getDate(){
         return date;
     }
 
     public String toString(){
-        return date + "\n" + String.valueOf(totalCalories) + "  total calories";
+        return date + "\n" + String.valueOf(totalCalories) + " Total Calories";
     }
 }
