@@ -38,7 +38,7 @@
         android:layout_marginEnd="17dp"
         android:layout_marginTop="8dp"
         android:onClick="deleteButtonAction"
-        android:text="Delete date"
+        android:text="Delete food"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/choiceText" />
 

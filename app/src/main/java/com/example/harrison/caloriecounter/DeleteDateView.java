@@ -1,5 +1,13 @@
 package com.example.harrison.caloriecounter;
+/*
+This group consists of the following people
 
+Crystal Lai Ton Nu  17316217
+Ashley Ju           89693512
+Katrin Martinez     38176707
+Harrison Huang      48425701
+
+*/
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -91,9 +100,15 @@ public class DeleteDateView extends AppCompatActivity
     }
 
     public void onClickDeleteDate(View view){
-        if (!selectedDate.equals(""))
+        if (!selectedDate.equals("")) {
             refUser.child(selectedDate).removeValue();
-        goBack(view);
+            Toast.makeText(this, "You have deleted " + selectedDate + " from " + username, Toast.LENGTH_LONG).show();
+            goBack(view);
+        }
+        else
+        {
+            Toast.makeText(this, "Please select a date to delete", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void searchButton(View view){
@@ -103,7 +118,7 @@ public class DeleteDateView extends AppCompatActivity
         String searchText = ((EditText)findViewById(R.id.editText_deleteDateSearch)).getText().toString();
         for (String date : user.getArrayOfJustDates()){
             //Log.d("TestingLooop", date);
-            if (date.substring(0, searchText.length()).equalsIgnoreCase(searchText)){
+            if (searchText.length() <= date.length() && date.substring(0, searchText.length()).equalsIgnoreCase(searchText)){
                 dateAdapter.add(date);
             }
         }

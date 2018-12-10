@@ -1,5 +1,13 @@
 package com.example.harrison.caloriecounter;
+/*
+This group consists of the following people
 
+Crystal Lai Ton Nu  17316217
+Ashley Ju           89693512
+Katrin Martinez     38176707
+Harrison Huang      48425701
+
+*/
 import com.google.firebase.database.DataSnapshot;
 
 public class Food {
